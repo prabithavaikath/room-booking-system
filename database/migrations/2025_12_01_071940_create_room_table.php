@@ -19,7 +19,6 @@ return new class extends Migration
             $table->boolean('availability_status')->default(true);
             $table->timestamps();
             
-            // Add index for better performance
             $table->index(['type', 'availability_status']);
         });
     }

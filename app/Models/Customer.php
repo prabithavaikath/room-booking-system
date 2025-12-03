@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class Customer extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $guard = 'web';
+    protected $guard = 'customer';
 
     /**
      * The attributes that are mass assignable.
@@ -18,10 +18,19 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
+        'phone',
         'password',
-        'role',
+        'address',
+        'city',
+        'state',
+        'country',
+        'postal_code',
+        'date_of_birth',
+        'status',
+        'verification_token',
     ];
 
     /**
@@ -32,6 +41,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_token',
     ];
 
     /**
@@ -44,22 +54,31 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'date_of_birth' => 'date',
         ];
     }
 
     /**
-     * Check if user is admin
+     * Get full name attribute
      */
-    public function isAdmin()
+    public function getFullNameAttribute()
     {
-        return $this->role === 'admin';
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     /**
-     * Check if user is super admin
+     * Get customer's bookings
      */
-    public function isSuperAdmin()
+    public function bookings()
     {
-        return $this->email === 'superadmin@hotel.com';
+        return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Check if customer is active
+     */
+    public function isActive()
+    {
+        return $this->status === 'active';
     }
 }

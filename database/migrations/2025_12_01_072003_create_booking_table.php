@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('room_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('cascade');
             $table->string('customer_name');
             $table->string('customer_email');
             $table->string('customer_phone')->nullable();
@@ -22,10 +23,8 @@ return new class extends Migration
             $table->text('special_requests')->nullable();
             $table->timestamps();
             
-            // Add indexes for performance
             $table->index(['check_in_date', 'check_out_date']);
             $table->index('status');
-            $table->index(['customer_email', 'created_at']);
         });
     }
 

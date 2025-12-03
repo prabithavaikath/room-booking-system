@@ -15,28 +15,24 @@ abstract class TestCase extends BaseTestCase
     /**
      * Create an admin user
      */
-    protected function createAdminUser(array $attributes = [])
+    protected function createAdminUser()
     {
-        $defaults = [
+        return User::factory()->create([
             'email' => 'admin@hotel.com',
             'role' => 'admin',
             'password' => bcrypt('password123'),
-        ];
-
-        return User::factory()->create(array_merge($defaults, $attributes));
+        ]);
     }
 
     /**
      * Create a customer
      */
-    protected function createCustomer(array $attributes = [])
+    protected function createCustomer()
     {
-        $defaults = [
+        return Customer::factory()->create([
             'email' => 'customer@example.com',
             'password' => bcrypt('password123'),
-        ];
-
-        return Customer::factory()->create(array_merge($defaults, $attributes));
+        ]);
     }
 
     /**
@@ -71,12 +67,9 @@ abstract class TestCase extends BaseTestCase
     /**
      * Login as admin
      */
-    protected function loginAsAdmin($admin = null)
+    protected function loginAsAdmin()
     {
-        if (!$admin) {
-            $admin = $this->createAdminUser();
-        }
-        
+        $admin = $this->createAdminUser();
         $this->actingAs($admin, 'admin');
         return $admin;
     }
@@ -84,12 +77,9 @@ abstract class TestCase extends BaseTestCase
     /**
      * Login as customer
      */
-    protected function loginAsCustomer($customer = null)
+    protected function loginAsCustomer()
     {
-        if (!$customer) {
-            $customer = $this->createCustomer();
-        }
-        
+        $customer = $this->createCustomer();
         $this->actingAs($customer, 'customer');
         return $customer;
     }
