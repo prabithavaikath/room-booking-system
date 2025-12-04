@@ -24,7 +24,7 @@ class BookingController extends Controller
             $room = Room::find($request->room);
         }
         
-        // Get available rooms for the selected dates (if provided)
+        // Get available rooms for the selected dates
         $rooms = Room::where('availability_status', true)->get();
         
         // If authenticated customer, pre-fill their details

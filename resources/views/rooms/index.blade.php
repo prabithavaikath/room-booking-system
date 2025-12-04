@@ -8,10 +8,13 @@
         <h1><i class="bi bi-door-closed"></i> Room Management</h1>
         <p class="text-muted">Manage all rooms in the system</p>
     </div>
+
     <div class="col-md-6 text-end">
+            @if(auth('admin')->check())
         <a href="{{ route('rooms.create') }}" class="btn btn-success">
             <i class="bi bi-plus-circle"></i> Add New Room
         </a>
+        @endif
         <a href="{{ route('bookings.create') }}" class="btn btn-primary">
             <i class="bi bi-calendar-check"></i> New Booking
         </a>
@@ -85,6 +88,9 @@
                                 <a href="{{ route('rooms.show', $room) }}" class="btn btn-sm btn-info" title="View">
                                     <i class="bi bi-eye"></i>
                                 </a>
+
+                                   {{-- Only show the rest if user is admin --}}
+                                    @if(auth('admin')->check())
                                 <a href="{{ route('rooms.edit', $room) }}" class="btn btn-sm btn-warning" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
@@ -103,6 +109,7 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
+                                    @endif
                             </td>
                         </tr>
                         @endforeach

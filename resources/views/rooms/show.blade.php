@@ -45,15 +45,19 @@
                     
                     <div class="col-md-6 text-end">
                         <div class="btn-group" role="group">
+                               {{-- Only show the rest if user is admin --}}
+                                    @if(auth('admin')->check())
                             <a href="{{ route('rooms.edit', $room) }}" class="btn btn-warning">
                                 <i class="bi bi-pencil"></i> Edit
                             </a>
+                       
                             <form action="{{ route('rooms.toggle-availability', $room) }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn {{ $room->availability_status ? 'btn-secondary' : 'btn-success' }}">
                                     <i class="bi bi-power"></i> {{ $room->availability_status ? 'Mark Unavailable' : 'Mark Available' }}
                                 </button>
                             </form>
+                                 @endif
                             <a href="{{ route('bookings.create') }}?room={{ $room->id }}" class="btn btn-primary">
                                 <i class="bi bi-calendar-check"></i> Book This Room
                             </a>

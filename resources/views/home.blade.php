@@ -5,9 +5,10 @@
 @section('content')
 <!-- Hero Section -->
 <section class="hero-section" style="
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-    background-size: cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                url('/images/photo-1566073771259-6a8506099945.jpg');
     background-position: center;
+    background-size: cover;
     color: white;
     padding: 120px 0;
     margin-bottom: 60px;
