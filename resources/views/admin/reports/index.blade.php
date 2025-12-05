@@ -179,12 +179,12 @@
                     <a href="{{ route('admin.reports.bookings') }}" class="btn btn-outline-primary">
                         <i class="bi bi-calendar-check me-2"></i> Bookings Report
                     </a>
-                    <a href="{{ route('admin.reports.revenue') }}" class="btn btn-outline-success">
+                    <!-- <a href="{{ route('admin.reports.revenue') }}" class="btn btn-outline-success">
                         <i class="bi bi-currency-dollar me-2"></i> Revenue Report
                     </a>
                     <a href="{{ route('admin.reports.customers') }}" class="btn btn-outline-info">
                         <i class="bi bi-people me-2"></i> Customers Report
-                    </a>
+                    </a> -->
                     <a href="{{ route('admin.reports.export-bookings') }}" class="btn btn-outline-secondary">
                         <i class="bi bi-download me-2"></i> Export Bookings
                     </a>

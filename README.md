@@ -34,7 +34,7 @@ A fully featured hotel room booking application built with **Laravel**, offering
 ## 🛠️ Tech Stack
 - **Backend:** Laravel 12
 - **Frontend:** Blade, Bootstrap/Tailwind
-- **Database:** MySQL / MariaDB
+- **Database:** MySQL 
 - **Payment:** Stripe Test Mode
 - **Version Control:** Git & GitHub
 
