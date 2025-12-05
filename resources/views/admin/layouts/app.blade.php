@@ -104,8 +104,8 @@
     <a class="sidebar-link {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}" href="{{ route('admin.customers.index') }}">
         <i class="bi bi-people me-2"></i> Customer Management
     </a>
-    <a class="sidebar-link" href="#">
-        <i class="bi bi-bar-chart me-2"></i> Reports
+     <a class="sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">
+        <i class="bi bi-bar-chart me-2"></i> Reports & Analytics
     </a>
     <a class="sidebar-link" href="{{ route('admin.profile') }}">
         <i class="bi bi-gear me-2"></i> Settings

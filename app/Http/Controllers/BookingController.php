@@ -8,10 +8,21 @@ use App\Models\Customer;
 use App\Http\Requests\StoreBookingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
+use Illuminate\Support\Str; 
+use Carbon\Carbon;
 class BookingController extends Controller
 {
+    
+     public function index()
+    {
+        // Get bookings for the authenticated user
+        $bookings = Booking::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return view('bookings.index', compact('bookings'));
+    }
     /**
      * Show the booking form
      */
@@ -85,7 +96,78 @@ class BookingController extends Controller
     /**
      * Store a new booking
      */
-    public function store(StoreBookingRequest $request)
+
+    // In your BookingController
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'room_id' => 'required|exists:rooms,id',
+        'check_in_date' => 'required|date|after:today',
+        'check_out_date' => 'required|date|after:check_in_date',
+        'customer_name' => 'required|string|max:255',
+        'customer_email' => 'required|email',
+        'customer_phone' => 'required|string',
+        'special_requests' => 'nullable|string',
+        'total_amount' => 'required|numeric',
+        'payment_method' => 'required|in:hotel,stripe',
+    ]);
+
+    // Calculate nights and total if not provided
+    $checkIn = Carbon::parse($validated['check_in_date']);
+    $checkOut = Carbon::parse($validated['check_out_date']);
+    $nights = $checkIn->diffInDays($checkOut);
+    
+    $room = Room::findOrFail($validated['room_id']);
+    $total = $validated['total_amount'] ?? ($room->price * $nights);
+
+    // Determine status based on payment method
+    $status = 'pending'; // Default status
+    $paymentStatus = 'pending';
+    
+    if ($request->payment_method === 'stripe') {
+        // For Stripe payments, we'll update after successful payment
+        $status = 'pending';
+        $paymentStatus = 'pending';
+    } else {
+        // For hotel payments
+        $status = 'confirmed';
+        $paymentStatus = 'pending';
+    }
+
+    $booking = Booking::create([
+        'room_id' => $validated['room_id'],
+        'check_in_date' => $validated['check_in_date'],
+        'check_out_date' => $validated['check_out_date'],
+        'customer_name' => $validated['customer_name'],
+        'customer_email' => $validated['customer_email'],
+        'customer_phone' => $validated['customer_phone'],
+        'special_requests' => $validated['special_requests'] ?? null,
+        'total_amount' => $total,
+        'status' => $status,
+        'payment_status' => $paymentStatus,
+        'payment_method' => $validated['payment_method'],
+        'reference_number' => 'BOOK-' . strtoupper(Str::random(8)),
+    ]);
+
+    if ($request->payment_method === 'stripe') {
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking created. Redirecting to payment...',
+            'booking' => $booking
+        ]);
+    }
+
+    // For hotel payment, redirect to confirmation page
+     return redirect()->route('bookings.confirmation', $booking)
+                ->with('success', 'Booking confirmed successfully!');
+    // return response()->json([
+    //     'success' => true,
+    //     'message' => 'Booking confirmed successfully!',
+    //     'booking' => $booking,
+    //     'redirect' => route('bookings.confirmation', $booking)
+    // ]);
+}
+    public function store1(StoreBookingRequest $request)
     {
         try {
             // Get the room

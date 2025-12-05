@@ -21,6 +21,12 @@ return new class extends Migration
             $table->decimal('total_amount', 10, 2);
             $table->enum('status', ['confirmed', 'pending', 'cancelled', 'checked_in', 'checked_out'])->default('confirmed');
             $table->text('special_requests')->nullable();
+         
+       $table->string('payment_status', 20)->default('pending')->after('status');
+            $table->string('payment_method', 20)->nullable()->after('payment_status');
+            $table->string('reference_number', 50)->nullable()->after('payment_method');
+            $table->string('stripe_session_id', 100)->nullable()->after('reference_number');
+            $table->string('stripe_payment_intent', 100)->nullable()->after('stripe_session_id');
             $table->timestamps();
             
             $table->index(['check_in_date', 'check_out_date']);

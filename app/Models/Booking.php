@@ -15,19 +15,23 @@ class Booking extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
+  protected $fillable = [
         'room_id',
-        'customer_id',
+        'check_in_date',
+        'check_out_date',
         'customer_name',
         'customer_email',
         'customer_phone',
-        'check_in_date',
-        'check_out_date',
-        'total_nights',
+        'special_requests',
         'total_amount',
         'status',
-        'special_requests',
+        'payment_status',
+        'payment_method',
+        'reference_number',
+        'stripe_session_id',
+        'stripe_payment_intent'
     ];
+    
 
     /**
      * The attributes that should be cast.
@@ -35,10 +39,22 @@ class Booking extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'check_in_date' => 'date',
-        'check_out_date' => 'date',
+        'check_in_date' => 'datetime',
+        'check_out_date' => 'datetime',
         'total_amount' => 'decimal:2',
     ];
+
+       // Define status values
+    const STATUS_PENDING = 'pending';
+    const STATUS_CONFIRMED = 'confirmed';
+    const STATUS_CHECKED_IN = 'checked_in';
+    const STATUS_CHECKED_OUT = 'checked_out';
+    const STATUS_CANCELLED = 'cancelled';
+    
+    const PAYMENT_PENDING = 'pending';
+    const PAYMENT_PAID = 'paid';
+    const PAYMENT_FAILED = 'failed';
+    const PAYMENT_REFUNDED = 'refunded';
 
     /**
      * Get the room that owns the booking.

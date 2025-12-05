@@ -10,7 +10,8 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
-
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -100,9 +101,29 @@ Route::prefix('admin')->group(function () {
             Route::get('/export', 'export')->name('admin.customers.export');
         });
     });
+
+    Route::prefix('reports')->controller(ReportController::class)->group(function () {
+        Route::get('/', 'index')->name('admin.reports.index');
+        Route::get('/bookings', 'bookings')->name('admin.reports.bookings');
+        Route::get('/revenue', 'revenue')->name('admin.reports.revenue');
+        Route::get('/customers', 'customers')->name('admin.reports.customers');
+        Route::get('/export-bookings', 'exportBookings')->name('admin.reports.export-bookings');
+        Route::get('/export-revenue', 'exportRevenue')->name('admin.reports.export-revenue');
+    });
 });
 
+//Payment Routes
+Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('payment.intent');
+Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession'])->name('payment.session');
+Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+// routes/web.php
+Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+// Webhook route (POST only)
+Route::post('/stripe/webhook', [PaymentController::class, 'handleWebhook'])->name('stripe.webhook');
 // Booking Routes (accessible to both public and authenticated)
+Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+
 Route::prefix('bookings')->controller(BookingController::class)->group(function () {
     Route::get('/create', 'create')->name('bookings.create');
     Route::post('/check-availability', 'checkAvailability')->name('bookings.check-availability');
