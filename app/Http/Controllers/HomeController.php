@@ -29,7 +29,7 @@ class HomeController extends Controller
         $availableRooms = Room::where('availability_status', true)->count();
         $totalBookings = Booking::count();
         
-        // Get testimonials (in a real app, these would come from a database)
+        //  testimonials
         $testimonials = [
             [
                 'name' => 'Sarah Johnson',
