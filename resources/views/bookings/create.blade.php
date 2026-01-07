@@ -131,7 +131,7 @@
                                 You're logged in as <strong>{{ $customer->full_name }}</strong>. Your details will be auto-filled.
                             </div>
                             @endif
-                            
+                       
                             <form id="booking-form" action="{{ route('bookings.store') }}" method="POST">
                                 @csrf
                                 
@@ -140,7 +140,7 @@
                                 <input type="hidden" id="final_check_in_date" name="check_in_date">
                                 <input type="hidden" id="final_check_out_date" name="check_out_date">
                                 <input type="hidden" id="calculated_total" name="total_amount">
-                                
+                                <input type="hidden" id="customer_id" name="customer_id" value="{{ $customer ? $customer->id : '' }}">
                                 <!-- Guest Details -->
                                 <div class="mb-3">
                                     <label for="customer_name" class="form-label">Full Name *</label>
@@ -417,11 +417,13 @@
             // Remove selected class from all options
             roomOptions.forEach(opt => {
                 opt.classList.remove('selected');
+                 opt.removeAttribute('style');
+             
             });
             
             // Add selected class to clicked option
             roomElement.classList.add('selected');
-            
+              roomElement.setAttribute('style', 'border: 2px solid #35dc9fff; background-color: #ffe6e6;');
             // Update selected room ID
             selectedRoomId = roomElement.dataset.roomId;
             document.getElementById('room_id').value = selectedRoomId;

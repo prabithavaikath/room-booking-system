@@ -19,6 +19,7 @@ class Booking extends Model
         'room_id',
         'check_in_date',
         'check_out_date',
+        'customer_id',
         'customer_name',
         'customer_email',
         'customer_phone',
