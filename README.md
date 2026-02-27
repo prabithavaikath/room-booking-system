@@ -75,7 +75,6 @@ A fully featured hotel room booking application built with **Laravel**, offering
 | Requires 3D Secure | 4000 0025 0000 3155 |
 
 > Use any future date + any 3-digit CVV.
-
 ---
 
 ## 📥 Local Installation
