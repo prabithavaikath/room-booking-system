@@ -104,6 +104,7 @@ public function store(Request $request)
         'room_id' => 'required|exists:rooms,id',
         'check_in_date' => 'required|date|after:today',
         'check_out_date' => 'required|date|after:check_in_date',
+        'customer_id' => 'nullable|exists:customers,id',
         'customer_name' => 'required|string|max:255',
         'customer_email' => 'required|email',
         'customer_phone' => 'required|string',
@@ -138,6 +139,7 @@ public function store(Request $request)
         'room_id' => $validated['room_id'],
         'check_in_date' => $validated['check_in_date'],
         'check_out_date' => $validated['check_out_date'],
+        'customer_id' => $validated['customer_id'],
         'customer_name' => $validated['customer_name'],
         'customer_email' => $validated['customer_email'],
         'customer_phone' => $validated['customer_phone'],
@@ -167,67 +169,7 @@ public function store(Request $request)
     //     'redirect' => route('bookings.confirmation', $booking)
     // ]);
 }
-    public function store1(StoreBookingRequest $request)
-    {
-        try {
-            // Get the room
-            $room = Room::findOrFail($request->room_id);
-            
-            // Double-check availability
-            if (!$room->isAvailableForDates($request->check_in_date, $request->check_out_date)) {
-                return redirect()->back()
-                    ->withInput()
-                    ->with('error', 'Sorry, the room is no longer available for the selected dates. Please choose different dates.');
-            }
-            
-            // Calculate nights and total amount
-            $nights = Booking::calculateNights($request->check_in_date, $request->check_out_date);
-            $totalAmount = Booking::calculateTotalAmount($room->price, $nights);
-            
-            // Check if customer is logged in
-            $customerId = null;
-            if (Auth::guard('customer')->check()) {
-                $customer = Auth::guard('customer')->user();
-                $customerId = $customer->id;
-                
-                // Update customer phone if provided and different
-                if ($request->customer_phone && $customer->phone != $request->customer_phone) {
-                    $customer->phone = $request->customer_phone;
-                    $customer->save();
-                }
-            } else {
-                // Check if customer exists by email
-                $customer = Customer::where('email', $request->customer_email)->first();
-                if ($customer) {
-                    $customerId = $customer->id;
-                }
-            }
-            
-            // Create the booking
-            $booking = Booking::create([
-                'room_id' => $room->id,
-                'customer_id' => $customerId,
-                'customer_name' => $request->customer_name,
-                'customer_email' => $request->customer_email,
-                'customer_phone' => $request->customer_phone,
-                'check_in_date' => $request->check_in_date,
-                'check_out_date' => $request->check_out_date,
-                'total_nights' => $nights,
-                'total_amount' => $totalAmount,
-                'status' => 'confirmed',
-                'special_requests' => $request->special_requests,
-            ]);
-            
-            // Redirect to confirmation page
-            return redirect()->route('bookings.confirmation', $booking)
-                ->with('success', 'Booking confirmed successfully!');
-                
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'An error occurred while processing your booking. Please try again.');
-        }
-    }
+
 
     /**
      * Show booking confirmation
