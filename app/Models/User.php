@@ -60,6 +60,6 @@ class User extends Authenticatable
      */
     public function isSuperAdmin()
     {
-        return $this->email === 'superadmin@hotel.com';
+        return $this->email === 'superuser@hotel.com';
     }
 }
